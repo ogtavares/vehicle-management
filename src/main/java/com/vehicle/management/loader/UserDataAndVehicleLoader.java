@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Set;
 
 @Component
-public class UserDataLoader implements CommandLineRunner {
-
+public class UserDataAndVehicleLoader implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
 
@@ -22,8 +21,7 @@ public class UserDataLoader implements CommandLineRunner {
     @Override
     public void run(String... args) {
         if (userRepository.count() == 0) {
-
-            //cria usuário com ambos roles ADMIN e USER
+            //ADMIN e USER
             User adminUser = new User(
                     "adminUser",
                     passwordEncoder.encode("adminUser123"),
@@ -31,7 +29,7 @@ public class UserDataLoader implements CommandLineRunner {
             );
             userRepository.save(adminUser);
 
-            //cria usuário apenas ADMIN
+            //apenas ADMIN
             User onlyAdmin = new User(
                     "onlyAdmin",
                     passwordEncoder.encode("admin123"),
@@ -39,7 +37,7 @@ public class UserDataLoader implements CommandLineRunner {
             );
             userRepository.save(onlyAdmin);
 
-            //cria usuário apenas USER
+            //apenas USER
             User onlyUser = new User(
                     "onlyUser",
                     passwordEncoder.encode("user123"),
@@ -47,7 +45,7 @@ public class UserDataLoader implements CommandLineRunner {
             );
             userRepository.save(onlyUser);
 
-            //cria usuário sem role
+            //sem role
             User noRole = new User(
                     "noRole",
                     passwordEncoder.encode("nopass"),

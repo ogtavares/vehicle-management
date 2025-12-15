@@ -4,19 +4,18 @@ import com.vehicle.management.model.enums.Role;
 import jakarta.persistence.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
-@Table(
-        name = "users",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "username")
+@Table(name = "users", uniqueConstraints = {
+            @UniqueConstraint(columnNames = "username")
         }
 )
 public class User {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue
+    @Column(columnDefinition = "BINARY(16)")
+    private UUID id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -38,18 +37,17 @@ public class User {
 
     public User() {}
 
-    // Construtor com campos essenciais
     public User(String username, String password, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.roles = roles;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
