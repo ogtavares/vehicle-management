@@ -23,3 +23,7 @@ spring:
     host: ${SPRING_REDIS_HOST:localhost}
     port: ${SPRING_REDIS_PORT:6379}
     timeout: 60000
+
+jwt:
+  secret: minha-chave-super-secreta-para-o-teste-tecnico-min-32-chars
+  expiration: 3600000

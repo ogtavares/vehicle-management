@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AppErrorResponse {
+public class AppErrorResponseDTO {
     private int status;
     private String message;
     private String details;

@@ -4,7 +4,7 @@ import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.dto.VehicleDTO;
 import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
-import com.vehicle.management.dto.response.AppResponse;
+import com.vehicle.management.dto.response.AppResponseDTO;
 import com.vehicle.management.service.VehicleManagementService;
 import com.vehicle.management.mapper.VehicleSortMapper;
 import jakarta.validation.Valid;
@@ -38,7 +38,7 @@ public class VehicleManagementController {
     private VehicleManagementService vehicleManagementService;
 
     @GetMapping
-    public ResponseEntity<AppResponse<Page<VehicleDTO>>> getVehicles(
+    public ResponseEntity<AppResponseDTO<Page<VehicleDTO>>> getVehicles(
             @RequestParam(name = "placa", required = false) String plate,
             @RequestParam(name = "marca", required = false) String brand,
             @RequestParam(name = "ano", required = false) Integer year,
@@ -58,7 +58,7 @@ public class VehicleManagementController {
 
         Pageable mappedPageable = mapPageable(pageable);
 
-        AppResponse<Page<VehicleDTO>> response = vehicleManagementService.getVehiclesByFilters(plate, brand, year, color, minPrice, maxPrice, mappedPageable);
+        AppResponseDTO<Page<VehicleDTO>> response = vehicleManagementService.getVehiclesByFilters(plate, brand, year, color, minPrice, maxPrice, mappedPageable);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -66,7 +66,7 @@ public class VehicleManagementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppResponse<VehicleDTO>> getVehicleById(
+    public ResponseEntity<AppResponseDTO<VehicleDTO>> getVehicleById(
             @PathVariable
             @NotBlank
             @Pattern(
@@ -78,14 +78,14 @@ public class VehicleManagementController {
         logger.info("Id antes da conversão: {}", id);
         UUID uuid = UUID.fromString(id);
         logger.info("Id depois da conversão: {}", uuid);
-        AppResponse<VehicleDTO> response = vehicleManagementService.getVehicleById(uuid);
+        AppResponseDTO<VehicleDTO> response = vehicleManagementService.getVehicleById(uuid);
         return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<AppResponse<VehicleDTO>> addVehicle(@RequestBody @Valid VehicleRequestDTO vehicleDTO) {
-        AppResponse<VehicleDTO> response = vehicleManagementService.addVehicle(vehicleDTO);
+    public ResponseEntity<AppResponseDTO<VehicleDTO>> addVehicle(@RequestBody @Valid VehicleRequestDTO vehicleDTO) {
+        AppResponseDTO<VehicleDTO> response = vehicleManagementService.addVehicle(vehicleDTO);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -93,8 +93,8 @@ public class VehicleManagementController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppResponse<VehicleDTO>> updateVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id, @RequestBody @Valid VehicleRequestDTO vehicleDTO) {
-        AppResponse<VehicleDTO> response = vehicleManagementService.updateVehicle(UUID.fromString(id), vehicleDTO);
+    public ResponseEntity<AppResponseDTO<VehicleDTO>> updateVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id, @RequestBody @Valid VehicleRequestDTO vehicleDTO) {
+        AppResponseDTO<VehicleDTO> response = vehicleManagementService.updateVehicle(UUID.fromString(id), vehicleDTO);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -102,8 +102,8 @@ public class VehicleManagementController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AppResponse<VehicleDTO>> partialUpdateVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id, @RequestBody VehiclePatchRequestDTO vehicleDTO) {
-        AppResponse<VehicleDTO> response = vehicleManagementService.partialUpdateVehicle(UUID.fromString(id), vehicleDTO);
+    public ResponseEntity<AppResponseDTO<VehicleDTO>> partialUpdateVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id, @RequestBody VehiclePatchRequestDTO vehicleDTO) {
+        AppResponseDTO<VehicleDTO> response = vehicleManagementService.partialUpdateVehicle(UUID.fromString(id), vehicleDTO);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -111,8 +111,8 @@ public class VehicleManagementController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AppResponse<?>> deleteVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id) {
-        AppResponse<?> response = vehicleManagementService.deleteVehicle(UUID.fromString(id));
+    public ResponseEntity<AppResponseDTO<?>> deleteVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id) {
+        AppResponseDTO<?> response = vehicleManagementService.deleteVehicle(UUID.fromString(id));
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -120,8 +120,8 @@ public class VehicleManagementController {
     }
 
     @GetMapping("/relatorios/por-marca")
-    public ResponseEntity<AppResponse<Page<VehicleBrandReportDTO>>> getVehicleBrandReport(@PageableDefault(sort = "brand", direction = Sort.Direction.ASC) Pageable pageable) {
-        AppResponse<Page<VehicleBrandReportDTO>> response = vehicleManagementService.getVehicleBrandReport(pageable);
+    public ResponseEntity<AppResponseDTO<Page<VehicleBrandReportDTO>>> getVehicleBrandReport(@PageableDefault(sort = "brand", direction = Sort.Direction.ASC) Pageable pageable) {
+        AppResponseDTO<Page<VehicleBrandReportDTO>> response = vehicleManagementService.getVehicleBrandReport(pageable);
 
         return ResponseEntity
                 .status(response.getStatus())

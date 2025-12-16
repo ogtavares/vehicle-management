@@ -1,8 +1,8 @@
-package com.vehicle.management.security.service.impl;
+package com.vehicle.management.security.auth.service.impl;
 
-import com.vehicle.management.model.entity.User;
-import com.vehicle.management.repository.UserRepository;
-import com.vehicle.management.security.service.UserDetailService;
+import com.vehicle.management.security.user.model.entity.User;
+import com.vehicle.management.security.repository.UserRepository;
+import com.vehicle.management.security.auth.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

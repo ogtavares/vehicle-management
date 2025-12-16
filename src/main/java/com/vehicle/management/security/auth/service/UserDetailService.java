@@ -1,4 +1,4 @@
-package com.vehicle.management.security.service;
+package com.vehicle.management.security.auth.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 

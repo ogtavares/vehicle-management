@@ -1,4 +1,4 @@
-package com.vehicle.management.model.entity;
+package com.vehicle.management.security.user.model.entity;
 
 import com.vehicle.management.model.enums.Role;
 import jakarta.persistence.*;

@@ -5,7 +5,7 @@ import com.vehicle.management.dto.VehicleDTO;
 import com.vehicle.management.dto.VehicleFilterDTO;
 import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
-import com.vehicle.management.dto.response.AppResponse;
+import com.vehicle.management.dto.response.AppResponseDTO;
 import com.vehicle.management.mapper.VehicleMapper;
 import com.vehicle.management.model.entity.Vehicle;
 import com.vehicle.management.repository.VehicleManagementRepository;
@@ -32,7 +32,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     VehiclePriceConversionService vehiclePriceConversionService;
 
     @Override
-    public AppResponse<Page<VehicleDTO>> getVehiclesByFilters(
+    public AppResponseDTO<Page<VehicleDTO>> getVehiclesByFilters(
             String plate,
             String brand,
             Integer vehicleYear,
@@ -65,7 +65,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         );
 
         if (!vehicles.hasContent()) {
-            return AppResponse.getSuccessResponse(
+            return AppResponseDTO.getSuccessResponse(
                     "Não há veículos para os parâmetros informados.",
                     parameters
             );
@@ -79,7 +79,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             }
         });
 
-        return AppResponse.<Page<VehicleDTO>>builder()
+        return AppResponseDTO.<Page<VehicleDTO>>builder()
                 .content(new PageImpl<>(dtoList, vehicles.getPageable(), vehicles.getTotalElements()))
                 .status(200)
                 .success(true)
@@ -90,21 +90,21 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
 
 
     @Override
-    public AppResponse<VehicleDTO> getVehicleById(UUID id) {
+    public AppResponseDTO<VehicleDTO> getVehicleById(UUID id) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .build();
         Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
             Optional<Vehicle> vehicle = repository.findByIdAndActiveTrue(id);
             if (vehicle.isEmpty()){
-                return AppResponse.getSuccessResponse("Não há veículo ativo para o id informado.", parameters);
+                return AppResponseDTO.getSuccessResponse("Não há veículo ativo para o id informado.", parameters);
             }
         VehicleDTO dto = VehicleMapper.toDTO(vehicle.get());
             if (nonNull(dto.getPrice())) {
                 dto.setPrice(vehiclePriceConversionService.convertUsdToBrl(dto.getPrice()));
             }
 
-            return AppResponse.<VehicleDTO>builder()
+            return AppResponseDTO.<VehicleDTO>builder()
                     .content(dto)
                     .status(200)
                     .success(true)
@@ -114,15 +114,15 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponse<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable) {
+    public AppResponseDTO<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable) {
         Page<VehicleBrandReportDTO> vehicleCountPage = repository.countVehiclesByBrand(pageable);
         if (!vehicleCountPage.hasContent()) {
-            return AppResponse.getSuccessResponse(
+            return AppResponseDTO.getSuccessResponse(
                     "Não há veículos ativos para a criação do relatório."
             );
         }
 
-        return AppResponse.<Page<VehicleBrandReportDTO>>builder()
+        return AppResponseDTO.<Page<VehicleBrandReportDTO>>builder()
                 .content(vehicleCountPage)
                 .status(200)
                 .success(true)
@@ -131,7 +131,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponse<VehicleDTO> addVehicle(VehicleRequestDTO vehicleDTO) {
+    public AppResponseDTO<VehicleDTO> addVehicle(VehicleRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .brand(vehicleDTO.getBrand())
                 .vehicleYear(vehicleDTO.getVehicleYear())
@@ -157,7 +157,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         if (nonNull(savedDTO.getPrice())){
             savedDTO.setPrice(vehiclePriceConversionService.convertUsdToBrl(savedDTO.getPrice()));
         }
-        return AppResponse.<VehicleDTO>builder()
+        return AppResponseDTO.<VehicleDTO>builder()
                 .status(201)
                 .success(true)
                 .content(savedDTO)
@@ -167,7 +167,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponse<VehicleDTO> updateVehicle(UUID id, VehicleRequestDTO vehicleDTO) {
+    public AppResponseDTO<VehicleDTO> updateVehicle(UUID id, VehicleRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .brand(vehicleDTO.getBrand())
@@ -199,7 +199,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             updatedDto.setPrice(vehiclePriceConversionService.convertUsdToBrl(updatedDto.getPrice()));
         }
 
-        return AppResponse.<VehicleDTO>builder()
+        return AppResponseDTO.<VehicleDTO>builder()
                 .status(200)
                 .success(true)
                 .message("Veículo atualizado com sucesso!")
@@ -209,7 +209,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponse<VehicleDTO> partialUpdateVehicle(UUID id, VehiclePatchRequestDTO vehicleDTO) {
+    public AppResponseDTO<VehicleDTO> partialUpdateVehicle(UUID id, VehiclePatchRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .build();
@@ -235,7 +235,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             updatedDto.setPrice(vehiclePriceConversionService.convertUsdToBrl(updatedDto.getPrice()));
         }
 
-        return AppResponse.<VehicleDTO>builder()
+        return AppResponseDTO.<VehicleDTO>builder()
                 .status(200)
                 .success(true)
                 .message("Veículo atualizado parcialmente com sucesso!")
@@ -245,7 +245,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponse<?> deleteVehicle(UUID id) {
+    public AppResponseDTO<?> deleteVehicle(UUID id) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .build();
@@ -258,7 +258,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
 
         repository.deactivateById(id);
 
-        return AppResponse.builder()
+        return AppResponseDTO.builder()
                 .status(200)
                 .success(true)
                 .message("Veículo removido com sucesso!")

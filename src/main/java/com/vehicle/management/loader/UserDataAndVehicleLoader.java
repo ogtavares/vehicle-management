@@ -1,9 +1,9 @@
 package com.vehicle.management.loader;
 
-import com.vehicle.management.model.entity.User;
+import com.vehicle.management.security.user.model.entity.User;
 import com.vehicle.management.model.entity.Vehicle;
 import com.vehicle.management.model.enums.Role;
-import com.vehicle.management.repository.UserRepository;
+import com.vehicle.management.security.repository.UserRepository;
 import com.vehicle.management.repository.VehicleManagementRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
