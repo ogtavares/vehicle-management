@@ -2,6 +2,7 @@ package com.vehicle.management.service;
 
 import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.dto.VehicleDTO;
+import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
 
 import com.vehicle.management.dto.response.AppResponse;
@@ -17,6 +18,6 @@ public interface VehicleManagementService {
     AppResponse<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable);
     AppResponse<VehicleDTO> addVehicle(VehicleRequestDTO vehicleDTO);
     AppResponse<VehicleDTO> updateVehicle(UUID id, VehicleRequestDTO vehicleDTO);
-    AppResponse<VehicleDTO> partialUpdateVehicle(UUID id, VehicleRequestDTO vehicleDTO);
+    AppResponse<VehicleDTO> partialUpdateVehicle(UUID id, VehiclePatchRequestDTO vehicleDTO);
     AppResponse<?> deleteVehicle(UUID id);
 }

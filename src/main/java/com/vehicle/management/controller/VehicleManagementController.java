@@ -2,12 +2,13 @@ package com.vehicle.management.controller;
 
 import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.dto.VehicleDTO;
+import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
 import com.vehicle.management.dto.response.AppResponse;
 import com.vehicle.management.service.VehicleManagementService;
-import com.vehicle.management.util.VehicleSortMapper;
+import com.vehicle.management.mapper.VehicleSortMapper;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,18 +66,26 @@ public class VehicleManagementController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppResponse<VehicleDTO>> getVehicleById(@PathVariable @NotNull @Pattern(regexp = "^[0-9a-fA-F-]{36}$", message = "ID inválido") UUID id) {
-        AppResponse<VehicleDTO> response = vehicleManagementService.getVehicleById(id);
-
-        return ResponseEntity
-                .status(response.getStatus())
-                .body(response);
+    public ResponseEntity<AppResponse<VehicleDTO>> getVehicleById(
+            @PathVariable
+            @NotBlank
+            @Pattern(
+                    regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+                    message = "ID inválido"
+            )
+            String id
+    ) {
+        logger.info("Id antes da conversão: {}", id);
+        UUID uuid = UUID.fromString(id);
+        logger.info("Id depois da conversão: {}", uuid);
+        AppResponse<VehicleDTO> response = vehicleManagementService.getVehicleById(uuid);
+        return ResponseEntity.status(response.getStatus()).body(response);
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<AppResponse<?>> addVehicle(@RequestBody @Valid VehicleRequestDTO vehicleDTO) {
-        AppResponse<?> response = vehicleManagementService.addVehicle(vehicleDTO);
+    public ResponseEntity<AppResponse<VehicleDTO>> addVehicle(@RequestBody @Valid VehicleRequestDTO vehicleDTO) {
+        AppResponse<VehicleDTO> response = vehicleManagementService.addVehicle(vehicleDTO);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -84,8 +93,8 @@ public class VehicleManagementController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<AppResponse<VehicleDTO>> updateVehicle(@PathVariable @NotNull @Pattern(regexp = "^[0-9a-fA-F-]{36}$", message = "ID inválido") UUID id, @RequestBody @Valid VehicleRequestDTO vehicleDTO) {
-        AppResponse<VehicleDTO> response =vehicleManagementService.updateVehicle(id, vehicleDTO);
+    public ResponseEntity<AppResponse<VehicleDTO>> updateVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id, @RequestBody @Valid VehicleRequestDTO vehicleDTO) {
+        AppResponse<VehicleDTO> response = vehicleManagementService.updateVehicle(UUID.fromString(id), vehicleDTO);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -93,8 +102,8 @@ public class VehicleManagementController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AppResponse<VehicleDTO>> partialUpdateVehicle(@PathVariable @NotNull @Pattern(regexp = "^[0-9a-fA-F-]{36}$", message = "ID inválido") UUID id, @RequestBody @Valid VehicleRequestDTO vehicleDTO) {
-        AppResponse<VehicleDTO> response = vehicleManagementService.partialUpdateVehicle(id, vehicleDTO);
+    public ResponseEntity<AppResponse<VehicleDTO>> partialUpdateVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id, @RequestBody VehiclePatchRequestDTO vehicleDTO) {
+        AppResponse<VehicleDTO> response = vehicleManagementService.partialUpdateVehicle(UUID.fromString(id), vehicleDTO);
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -102,8 +111,8 @@ public class VehicleManagementController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AppResponse<?>> deleteVehicle(@PathVariable @NotNull @Pattern(regexp = "^[0-9a-fA-F-]{36}$", message = "ID inválido") UUID id) {
-        AppResponse<?> response = vehicleManagementService.deleteVehicle(id);
+    public ResponseEntity<AppResponse<?>> deleteVehicle(@PathVariable @NotBlank @Pattern(regexp = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", message = "ID inválido") String id) {
+        AppResponse<?> response = vehicleManagementService.deleteVehicle(UUID.fromString(id));
 
         return ResponseEntity
                 .status(response.getStatus())
@@ -111,7 +120,7 @@ public class VehicleManagementController {
     }
 
     @GetMapping("/relatorios/por-marca")
-    public ResponseEntity<AppResponse<Page<VehicleBrandReportDTO>>> getVehicleBrandReport(@PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<AppResponse<Page<VehicleBrandReportDTO>>> getVehicleBrandReport(@PageableDefault(sort = "brand", direction = Sort.Direction.ASC) Pageable pageable) {
         AppResponse<Page<VehicleBrandReportDTO>> response = vehicleManagementService.getVehicleBrandReport(pageable);
 
         return ResponseEntity

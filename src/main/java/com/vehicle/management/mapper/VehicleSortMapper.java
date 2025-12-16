@@ -1,11 +1,11 @@
-package com.vehicle.management.util;
+package com.vehicle.management.mapper;
+
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
+@NoArgsConstructor
 public final class VehicleSortMapper {
-
-    private VehicleSortMapper() {}
-
     public static final Map<String, String> SORT_FIELDS = Map.of(
             "placa", "plate",
             "marca", "brand",

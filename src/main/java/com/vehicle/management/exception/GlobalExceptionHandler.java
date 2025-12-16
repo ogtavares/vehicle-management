@@ -4,6 +4,7 @@ import com.vehicle.management.dto.response.AppErrorResponse;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -64,6 +65,25 @@ public class GlobalExceptionHandler {
         AppErrorResponse error = AppErrorResponse.builder()
                 .status(400)
                 .message("Parâmetro inválido")
+                .details(details)
+                .build();
+
+        return ResponseEntity.badRequest().body(error);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<AppErrorResponse> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+
+        String details = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getDefaultMessage())
+                .findFirst()
+                .orElse("Erro de validação");
+
+        AppErrorResponse error = AppErrorResponse.builder()
+                .status(400)
+                .message("Erro de validação")
                 .details(details)
                 .build();
 

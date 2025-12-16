@@ -1,5 +1,6 @@
 package com.vehicle.management.repository;
 
+import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.model.entity.Vehicle;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -49,6 +50,14 @@ public interface VehicleManagementRepository extends JpaRepository<Vehicle, UUID
     @Query("UPDATE Vehicle v SET v.active = false WHERE v.id = :id")
     void deactivateById(UUID id);
 
-    @Query("SELECT v.brand AS brand, COUNT(v) AS total FROM Vehicle v WHERE v.active = true GROUP BY v.brand")
-    Page<Object[]> countVehiclesByBrand(Pageable pageable);
+    @Query("""
+    SELECT new com.vehicle.management.dto.VehicleBrandReportDTO(
+        v.brand,
+        COUNT(v)
+    )
+    FROM Vehicle v
+    WHERE v.active = true
+    GROUP BY v.brand
+    """)
+    Page<VehicleBrandReportDTO> countVehiclesByBrand(Pageable pageable);
 }

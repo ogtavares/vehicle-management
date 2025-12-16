@@ -3,13 +3,15 @@ package com.vehicle.management.service.impl;
 import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.dto.VehicleDTO;
 import com.vehicle.management.dto.VehicleFilterDTO;
+import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
 import com.vehicle.management.dto.response.AppResponse;
+import com.vehicle.management.mapper.VehicleMapper;
 import com.vehicle.management.model.entity.Vehicle;
 import com.vehicle.management.repository.VehicleManagementRepository;
 import com.vehicle.management.service.VehicleManagementService;
 import com.vehicle.management.service.VehiclePriceConversionService;
-import com.vehicle.management.util.JsonMapperUtil;
+import com.vehicle.management.mapper.JsonMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -49,7 +51,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
                 .maxPrice(maxPrice)
                 .build();
 
-        Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+        Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
 
         if (nonNull(minPrice)) {
             minPrice = vehiclePriceConversionService.convertBrlToUsd(minPrice);
@@ -69,9 +71,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             );
         }
 
-        List<VehicleDTO> dtoList = JsonMapperUtil.convertList(
-                vehicles.getContent(), VehicleDTO.class
-        );
+        List<VehicleDTO> dtoList = VehicleMapper.toDTOList(vehicles.getContent());
 
         dtoList.forEach(v -> {
             if (nonNull(v.getPrice())) {
@@ -94,12 +94,12 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .build();
-        Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+        Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
             Optional<Vehicle> vehicle = repository.findByIdAndActiveTrue(id);
             if (vehicle.isEmpty()){
                 return AppResponse.getSuccessResponse("Não há veículo ativo para o id informado.", parameters);
             }
-        VehicleDTO dto = JsonMapperUtil.convert(vehicle.get(), VehicleDTO.class);
+        VehicleDTO dto = VehicleMapper.toDTO(vehicle.get());
             if (nonNull(dto.getPrice())) {
                 dto.setPrice(vehiclePriceConversionService.convertUsdToBrl(dto.getPrice()));
             }
@@ -115,20 +115,15 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
 
     @Override
     public AppResponse<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable) {
-        Page<Object[]> vehicleCountPage = repository.countVehiclesByBrand(pageable);
+        Page<VehicleBrandReportDTO> vehicleCountPage = repository.countVehiclesByBrand(pageable);
         if (!vehicleCountPage.hasContent()) {
             return AppResponse.getSuccessResponse(
                     "Não há veículos ativos para a criação do relatório."
             );
         }
-        List<VehicleBrandReportDTO> report = vehicleCountPage.getContent().stream()
-                .map(r -> new VehicleBrandReportDTO((String) r[0], (Long) r[1]))
-                .toList();
-
-        Page<VehicleBrandReportDTO> pageReport = new PageImpl<>(report, pageable, vehicleCountPage.getTotalElements());
 
         return AppResponse.<Page<VehicleBrandReportDTO>>builder()
-                .content(pageReport)
+                .content(vehicleCountPage)
                 .status(200)
                 .success(true)
                 .message("Relatório criado com sucesso!")
@@ -142,21 +137,22 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
                 .vehicleYear(vehicleDTO.getVehicleYear())
                 .plate(vehicleDTO.getPlate())
                 .color(vehicleDTO.getColor())
+                .price(vehicleDTO.getPrice())
                 .build();
-        Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+        Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
 
         Optional<Vehicle> existentVehicle = repository.findByPlateAndActiveTrue(vehicleDTO.getPlate());
         if (existentVehicle.isPresent()) {
             throw new IllegalArgumentException(String.format("Já existe um veículo com a placa (%s) informada.", vehicleDTO.getPlate()));
         }
 
-        Vehicle vehicle = JsonMapperUtil.convert(vehicleDTO, Vehicle.class);
+        Vehicle vehicle = VehicleMapper.toEntity(vehicleDTO);
         if (nonNull(vehicleDTO.getPrice())) {
             vehicle.setPrice(vehiclePriceConversionService.convertBrlToUsd(vehicleDTO.getPrice()));
         }
         Vehicle savedVehicle = repository.save(vehicle);
 
-        VehicleDTO savedDTO = JsonMapperUtil.convert(savedVehicle, VehicleDTO.class);
+        VehicleDTO savedDTO = VehicleMapper.toDTO(savedVehicle);
 
         if (nonNull(savedDTO.getPrice())){
             savedDTO.setPrice(vehiclePriceConversionService.convertUsdToBrl(savedDTO.getPrice()));
@@ -178,8 +174,9 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
                 .vehicleYear(vehicleDTO.getVehicleYear())
                 .plate(vehicleDTO.getPlate())
                 .color(vehicleDTO.getColor())
+                .price(vehicleDTO.getPrice())
                 .build();
-        Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+        Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
 
         Optional<Vehicle> existing = repository.findByIdAndActiveTrue(id);
         if (existing.isEmpty()) {
@@ -197,7 +194,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
 
         Vehicle updated = repository.save(vehicle);
 
-        VehicleDTO updatedDto = JsonMapperUtil.convert(updated, VehicleDTO.class);
+        VehicleDTO updatedDto = VehicleMapper.toDTO(updated);
         if (nonNull(updatedDto.getPrice())) {
             updatedDto.setPrice(vehiclePriceConversionService.convertUsdToBrl(updatedDto.getPrice()));
         }
@@ -212,11 +209,11 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponse<VehicleDTO> partialUpdateVehicle(UUID id, VehicleRequestDTO vehicleDTO) {
+    public AppResponse<VehicleDTO> partialUpdateVehicle(UUID id, VehiclePatchRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .build();
-        Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+        Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
 
         Optional<Vehicle> existing = repository.findByIdAndActiveTrue(id);
         if (existing.isEmpty()) {
@@ -233,7 +230,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
 
         Vehicle updated = repository.save(vehicle);
 
-        VehicleDTO updatedDto = JsonMapperUtil.convert(updated, VehicleDTO.class);
+        VehicleDTO updatedDto = VehicleMapper.toDTO(updated);
         if (nonNull(updatedDto.getPrice())) {
             updatedDto.setPrice(vehiclePriceConversionService.convertUsdToBrl(updatedDto.getPrice()));
         }
@@ -252,7 +249,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .build();
-        Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+        Map<String, Object> parameters = JsonMapper.toNonNullMap(filters);
 
         Optional<Vehicle> existing = repository.findByIdAndActiveTrue(id);
         if (existing.isEmpty()) {
@@ -269,7 +266,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
                 .build();
     }
 
-    private void applyPartialUpdates(Vehicle vehicle, VehicleRequestDTO vehicleDTO) {
+    private void applyPartialUpdates(Vehicle vehicle, VehiclePatchRequestDTO vehicleDTO) {
         if (nonNull(vehicleDTO.getBrand())) vehicle.setBrand(vehicleDTO.getBrand());
         if (nonNull(vehicleDTO.getPlate())) vehicle.setPlate(vehicleDTO.getPlate());
         if (nonNull(vehicleDTO.getColor())) vehicle.setColor(vehicleDTO.getColor());

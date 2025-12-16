@@ -1,22 +1,13 @@
-package com.vehicle.management.dto;
+package com.vehicle.management.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 @Data
-public class VehicleDTO {
-    private UUID id;
-
+public class VehiclePatchRequestDTO {
     @JsonProperty("placa")
     @JsonAlias("plate")
     private String plate;
@@ -36,8 +27,4 @@ public class VehicleDTO {
     @JsonProperty("preco")
     @JsonAlias("price")
     private BigDecimal price;
-
-    @JsonProperty("ativo")
-    @JsonAlias("active")
-    private boolean active;
 }

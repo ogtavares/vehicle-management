@@ -67,31 +67,31 @@ public class UserDataAndVehicleLoader implements CommandLineRunner {
         }
 
         List<Vehicle> vehicles = List.of(
-                new Vehicle("AAA-1001", "Ford", "Black", 2018, new BigDecimal("55000.00")),
-                new Vehicle("AAA-1002", "Ford", "White", 2019, new BigDecimal("62000.00")),
-                new Vehicle("AAA-1003", "Ford", "Red", 2020, new BigDecimal("72000.00")),
+                new Vehicle("AAA1001", "Ford", "Black", 2018, new BigDecimal("55000.00")),
+                new Vehicle("AAA1002", "Ford", "White", 2019, new BigDecimal("62000.00")),
+                new Vehicle("AAA1003", "Ford", "Red", 2020, new BigDecimal("72000.00")),
 
-                new Vehicle("BBB-2001", "Toyota", "Silver", 2019, new BigDecimal("85000.00")),
-                new Vehicle("BBB-2002", "Toyota", "Black", 2020, new BigDecimal("92000.00")),
-                new Vehicle("BBB-2003", "Toyota", "White", 2021, new BigDecimal("98000.00")),
+                new Vehicle("BBB2001", "Toyota", "Silver", 2019, new BigDecimal("85000.00")),
+                new Vehicle("BBB2002", "Toyota", "Black", 2020, new BigDecimal("92000.00")),
+                new Vehicle("BBB2003", "Toyota", "White", 2021, new BigDecimal("98000.00")),
 
-                new Vehicle("CCC-3001", "Honda", "Blue", 2018, new BigDecimal("78000.00")),
-                new Vehicle("CCC-3002", "Honda", "Black", 2019, new BigDecimal("83000.00")),
-                new Vehicle("CCC-3003", "Honda", "White", 2020, new BigDecimal("88000.00")),
+                new Vehicle("CCC3001", "Honda", "Blue", 2018, new BigDecimal("78000.00")),
+                new Vehicle("CCC3002", "Honda", "Black", 2019, new BigDecimal("83000.00")),
+                new Vehicle("CCC3003", "Honda", "White", 2020, new BigDecimal("88000.00")),
 
-                new Vehicle("DDD-4001", "Chevrolet", "Gray", 2017, new BigDecimal("60000.00")),
-                new Vehicle("DDD-4002", "Chevrolet", "Black", 2018, new BigDecimal("65000.00")),
-                new Vehicle("DDD-4003", "Chevrolet", "White", 2019, new BigDecimal("70000.00")),
+                new Vehicle("DDD4001", "Chevrolet", "Gray", 2017, new BigDecimal("60000.00")),
+                new Vehicle("DDD4002", "Chevrolet", "Black", 2018, new BigDecimal("65000.00")),
+                new Vehicle("DDD4003", "Chevrolet", "White", 2019, new BigDecimal("70000.00")),
 
-                new Vehicle("EEE-5001", "Volkswagen", "Blue", 2020, new BigDecimal("90000.00")),
-                new Vehicle("EEE-5002", "Volkswagen", "Black", 2021, new BigDecimal("95000.00")),
-                new Vehicle("EEE-5003", "Volkswagen", "White", 2022, new BigDecimal("105000.00")),
+                new Vehicle("EEE5001", "Volkswagen", "Blue", 2020, new BigDecimal("90000.00")),
+                new Vehicle("EEE5002", "Volkswagen", "Black", 2021, new BigDecimal("95000.00")),
+                new Vehicle("EEE5003", "Volkswagen", "White", 2022, new BigDecimal("105000.00")),
 
-                new Vehicle("FFF-6001", "BMW", "Black", 2021, new BigDecimal("180000.00")),
-                new Vehicle("FFF-6002", "BMW", "White", 2022, new BigDecimal("195000.00")),
+                new Vehicle("FFF6001", "BMW", "Black", 2021, new BigDecimal("180000.00")),
+                new Vehicle("FFF6002", "BMW", "White", 2022, new BigDecimal("195000.00")),
 
-                new Vehicle("GGG-7001", "Audi", "Gray", 2021, new BigDecimal("170000.00")),
-                new Vehicle("GGG-7002", "Audi", "Black", 2022, new BigDecimal("185000.00"))
+                new Vehicle("GGG7001", "Audi", "Gray", 2021, new BigDecimal("170000.00")),
+                new Vehicle("GGG7002", "Audi", "Black", 2022, new BigDecimal("185000.00"))
         );
 
         vehicleRepository.saveAll(vehicles);
