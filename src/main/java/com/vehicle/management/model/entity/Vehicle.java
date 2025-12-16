@@ -31,8 +31,8 @@ public class Vehicle {
     @Column(nullable = false)
     private String color;
 
-    @Column(nullable = false)
-    private Integer year;
+    @Column(nullable = false, name = "vehicle_year")
+    private Integer vehicleYear;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal price;
@@ -40,11 +40,11 @@ public class Vehicle {
     @Column(nullable = false)
     private boolean active = true;
 
-    public Vehicle(String plate, String brand, String color, Integer year, BigDecimal price) {
+    public Vehicle(String plate, String brand, String color, Integer vehicleYear, BigDecimal price) {
         this.plate = plate;
         this.brand = brand;
         this.color = color;
-        this.year = year;
+        this.vehicleYear = vehicleYear;
         this.price = price;
     }
 

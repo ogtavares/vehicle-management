@@ -19,18 +19,19 @@ public interface VehicleManagementRepository extends JpaRepository<Vehicle, UUID
     @Query("SELECT v FROM Vehicle v WHERE " +
             "(:plate IS NULL OR v.plate = :plate) AND " +
             "(:brand IS NULL OR v.brand = :brand) AND " +
-            "(:year IS NULL OR v.year = :year) AND " +
+            "(:vehicleYear IS NULL OR v.vehicleYear = :vehicleYear) AND " +
             "(:color IS NULL OR v.color = :color) AND " +
-            "(:price IS NULL OR price = :price) AND " +
+            "(:price IS NULL OR v.price = :price) AND " +
             "v.active = true")
     Page<Vehicle> findByFilters(
             @Param("plate") String plate,
             @Param("brand") String brand,
-            @Param("year") Integer year,
+            @Param("vehicleYear") Integer vehicleYear,
             @Param("color") String color,
             @Param("price") BigDecimal price,
             Pageable pageable
     );
+
 
     Page<Vehicle> findByPriceBetweenAndActiveTrue(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 

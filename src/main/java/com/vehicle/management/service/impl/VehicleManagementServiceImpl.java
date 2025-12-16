@@ -62,18 +62,18 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponseDTO<Page<VehicleDTO>> getVehiclesByFilters(String plate, String brand, Integer year, String color, BigDecimal price, Pageable pageable) {
+    public AppResponseDTO<Page<VehicleDTO>> getVehiclesByFilters(String plate, String brand, Integer vehicleYear, String color, BigDecimal price, Pageable pageable) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .plate(plate)
                 .brand(brand)
-                .year(year)
+                .vehicleYear(vehicleYear)
                 .color(color)
                 .price(price)
                 .build();
         Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
         try {
 
-            Page<Vehicle> vehicles = repository.findByFilters(plate, brand, year, color, price, pageable);
+            Page<Vehicle> vehicles = repository.findByFilters(plate, brand, vehicleYear, color, price, pageable);
             if (!vehicles.hasContent()){
                 return AppResponseDTO.getSuccessResponse("Não há veículos para os parâmetros informados.", parameters);
             }
@@ -215,7 +215,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     public AppResponseDTO<?> addVehicle(VehicleRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .brand(vehicleDTO.getBrand())
-                .year(vehicleDTO.getYear())
+                .vehicleYear(vehicleDTO.getVehicleYear())
                 .plate(vehicleDTO.getPlate())
                 .color(vehicleDTO.getColor())
                 .build();
@@ -262,7 +262,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .id(id)
                 .brand(vehicleDTO.getBrand())
-                .year(vehicleDTO.getYear())
+                .vehicleYear(vehicleDTO.getVehicleYear())
                 .plate(vehicleDTO.getPlate())
                 .color(vehicleDTO.getColor())
                 .build();
@@ -278,7 +278,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             vehicle.setBrand(vehicleDTO.getBrand());
             vehicle.setPlate(vehicleDTO.getPlate());
             vehicle.setColor(vehicleDTO.getColor());
-            vehicle.setYear(vehicleDTO.getYear());
+            vehicle.setVehicleYear(vehicleDTO.getVehicleYear());
             if (vehicleDTO.getPrice() != null) {
                 vehicle.setPrice(vehiclePriceConversionService.convertBrlToUsd(vehicleDTO.getPrice()));
             }
@@ -387,6 +387,6 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         if (nonNull(vehicleDTO.getBrand())) vehicle.setBrand(vehicleDTO.getBrand());
         if (nonNull(vehicleDTO.getPlate())) vehicle.setPlate(vehicleDTO.getPlate());
         if (nonNull(vehicleDTO.getColor())) vehicle.setColor(vehicleDTO.getColor());
-        if (nonNull(vehicleDTO.getYear())) vehicle.setYear(vehicleDTO.getYear());
+        if (nonNull(vehicleDTO.getVehicleYear())) vehicle.setVehicleYear(vehicleDTO.getVehicleYear());
     }
 }

@@ -14,7 +14,7 @@ public class VehicleFilterDTO {
     private UUID id;
     private String plate;
     private String brand;
-    private Integer year;
+    private Integer vehicleYear;
     private String color;
     private BigDecimal price;
     private BigDecimal minPrice;

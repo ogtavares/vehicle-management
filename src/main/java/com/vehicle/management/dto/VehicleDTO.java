@@ -17,6 +17,6 @@ public class VehicleDTO {
     private String plate;
     private String brand;
     private String color;
-    private Integer year;
+    private Integer vehicleYear;
     private BigDecimal price;
 }

@@ -20,7 +20,7 @@ public class VehicleRequestDTO {
     @NotBlank(message = "Cor é obrigatória")
     private String color;
     @NotBlank(message = "Ano é obrigatório")
-    private Integer year;
+    private Integer vehicleYear;
     @NotBlank(message = "Preço é obrigatório")
     private BigDecimal price;
 }
