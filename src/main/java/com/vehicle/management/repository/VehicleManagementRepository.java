@@ -42,6 +42,8 @@ public interface VehicleManagementRepository extends JpaRepository<Vehicle, UUID
 
     Optional<Vehicle> findByIdAndActiveTrue(UUID id);
 
+    Optional<Vehicle> findByPlateAndActiveTrue(String plate);
+
     @Modifying
     @Transactional
     @Query("UPDATE Vehicle v SET v.active = false WHERE v.id = :id")

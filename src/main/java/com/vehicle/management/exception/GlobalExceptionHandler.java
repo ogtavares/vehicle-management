@@ -2,6 +2,7 @@ package com.vehicle.management.exception;
 
 import com.vehicle.management.dto.response.AppErrorResponse;
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -9,6 +10,17 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<AppErrorResponse> handleGenericException(Exception ex) {
+
+        AppErrorResponse error = AppErrorResponse.builder()
+                .status(500)
+                .message("Erro interno do servidor")
+                .details("Ocorreu um erro inesperado. Por favor, tente novamente mais tarde ou entre em contato com o suporte.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+    }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<AppErrorResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
