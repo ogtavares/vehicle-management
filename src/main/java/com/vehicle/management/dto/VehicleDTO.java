@@ -19,4 +19,5 @@ public class VehicleDTO {
     private String color;
     private Integer vehicleYear;
     private BigDecimal price;
+    private boolean active;
 }
