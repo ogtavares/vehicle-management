@@ -16,22 +16,25 @@ import java.util.UUID;
 
 @Repository
 public interface VehicleManagementRepository extends JpaRepository<Vehicle, UUID> {
-    @Query("SELECT v FROM Vehicle v WHERE " +
-            "(:plate IS NULL OR v.plate = :plate) AND " +
-            "(:brand IS NULL OR v.brand = :brand) AND " +
-            "(:vehicleYear IS NULL OR v.vehicleYear = :vehicleYear) AND " +
-            "(:color IS NULL OR v.color = :color) AND " +
-            "(:price IS NULL OR v.price = :price) AND " +
-            "v.active = true")
+    @Query("""
+        SELECT v FROM Vehicle v WHERE
+        (:plate IS NULL OR LOWER(v.plate) = LOWER(:plate)) AND
+        (:brand IS NULL OR LOWER(v.brand) = LOWER(:brand)) AND
+        (:vehicleYear IS NULL OR v.vehicleYear = :vehicleYear) AND
+        (:color IS NULL OR LOWER(v.color) = LOWER(:color)) AND
+        (:minPrice IS NULL OR v.price >= :minPrice) AND
+        (:maxPrice IS NULL OR v.price <= :maxPrice) AND
+        v.active = true
+    """)
     Page<Vehicle> findByFilters(
             @Param("plate") String plate,
             @Param("brand") String brand,
             @Param("vehicleYear") Integer vehicleYear,
             @Param("color") String color,
-            @Param("price") BigDecimal price,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
             Pageable pageable
     );
-
 
     Page<Vehicle> findByPriceBetweenAndActiveTrue(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
 
@@ -46,5 +49,4 @@ public interface VehicleManagementRepository extends JpaRepository<Vehicle, UUID
 
     @Query("SELECT v.brand AS brand, COUNT(v) AS total FROM Vehicle v WHERE v.active = true GROUP BY v.brand")
     Page<Object[]> countVehiclesByBrand(Pageable pageable);
-
 }

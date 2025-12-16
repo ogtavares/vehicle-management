@@ -4,7 +4,7 @@ import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.dto.VehicleDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
 
-import com.vehicle.management.dto.response.AppResponseDTO;
+import com.vehicle.management.dto.response.AppResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,13 +12,13 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 public interface VehicleManagementService {
-    AppResponseDTO<Page<VehicleDTO>> getAllVehicles(Pageable pageable);
-    AppResponseDTO<Page<VehicleDTO>> getVehiclesByFilters(String plate, String brand, Integer year, String color, BigDecimal price, Pageable pageable);
-    AppResponseDTO<Page<VehicleDTO>> getVehiclesBypriceRange(BigDecimal minprice, BigDecimal maxprice, Pageable pageable);
-    AppResponseDTO<VehicleDTO> getVehicleById(UUID id);
-    AppResponseDTO<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable);
-    AppResponseDTO<?> addVehicle(VehicleRequestDTO vehicleDTO);
-    AppResponseDTO<VehicleDTO> updateVehicle(UUID id, VehicleRequestDTO vehicleDTO);
-    AppResponseDTO<VehicleDTO> partialUpdateVehicle(UUID id, VehicleRequestDTO vehicleDTO);
-    AppResponseDTO<?> deleteVehicle(UUID id);
+//    AppResponse<Page<VehicleDTO>> getAllVehicles(Pageable pageable);
+    AppResponse<Page<VehicleDTO>> getVehiclesByFilters(String plate, String brand, Integer vehicleYear, String color, BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable);
+//    AppResponse<Page<VehicleDTO>> getVehiclesBypriceRange(BigDecimal minprice, BigDecimal maxprice, Pageable pageable);
+    AppResponse<VehicleDTO> getVehicleById(UUID id);
+    AppResponse<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable);
+    AppResponse<?> addVehicle(VehicleRequestDTO vehicleDTO);
+    AppResponse<VehicleDTO> updateVehicle(UUID id, VehicleRequestDTO vehicleDTO);
+    AppResponse<VehicleDTO> partialUpdateVehicle(UUID id, VehicleRequestDTO vehicleDTO);
+    AppResponse<?> deleteVehicle(UUID id);
 }
