@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailService {
-
     @Autowired
     private UserRepository userRepository;
 

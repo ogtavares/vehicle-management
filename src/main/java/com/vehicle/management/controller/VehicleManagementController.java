@@ -31,7 +31,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/veiculos")
 @Validated
 public class VehicleManagementController {
-
     private final Logger logger = LoggerFactory.getLogger(VehicleManagementController.class);
 
     @Autowired

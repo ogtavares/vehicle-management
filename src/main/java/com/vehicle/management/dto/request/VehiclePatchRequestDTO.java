@@ -2,11 +2,13 @@ package com.vehicle.management.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 public class VehiclePatchRequestDTO {
     @JsonProperty("placa")
     @JsonAlias("plate")

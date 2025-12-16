@@ -18,7 +18,8 @@ public class VehiclePriceConversionServiceImpl implements VehiclePriceConversion
     @Autowired
     private StringRedisTemplate redisTemplate;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    private RestTemplate restTemplate;
 
     public BigDecimal getUsdToBrlRate() {
         String rateStr = redisTemplate.opsForValue().get(USD_BRL_RATE_KEY);
