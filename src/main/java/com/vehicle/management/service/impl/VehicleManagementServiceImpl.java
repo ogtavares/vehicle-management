@@ -6,6 +6,7 @@ import com.vehicle.management.dto.VehicleFilterDTO;
 import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
 import com.vehicle.management.dto.response.AppResponseDTO;
+import com.vehicle.management.exception.ConflictException;
 import com.vehicle.management.mapper.VehicleMapper;
 import com.vehicle.management.model.entity.Vehicle;
 import com.vehicle.management.repository.VehicleManagementRepository;
@@ -143,7 +144,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
 
         Optional<Vehicle> existentVehicle = repository.findByPlateAndActiveTrue(vehicleDTO.getPlate());
         if (existentVehicle.isPresent()) {
-            throw new IllegalArgumentException(String.format("Já existe um veículo com a placa (%s) informada.", vehicleDTO.getPlate()));
+            throw new ConflictException(String.format("Já existe um veículo com a placa (%s) informada.", vehicleDTO.getPlate()));
         }
 
         Vehicle vehicle = VehicleMapper.toEntity(vehicleDTO);

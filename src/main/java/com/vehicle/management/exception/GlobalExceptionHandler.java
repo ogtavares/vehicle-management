@@ -101,4 +101,14 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<AppErrorResponseDTO> handleConflict(ConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(AppErrorResponseDTO.builder()
+                        .status(409)
+                        .message(ex.getMessage())
+                        .build());
+    }
+
 }

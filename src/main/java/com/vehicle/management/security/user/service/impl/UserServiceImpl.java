@@ -1,5 +1,6 @@
 package com.vehicle.management.security.user.service.impl;
 
+import com.vehicle.management.exception.ConflictException;
 import com.vehicle.management.model.enums.Role;
 import com.vehicle.management.security.user.dto.request.UserRequestDTO;
 import com.vehicle.management.security.repository.UserRepository;
@@ -22,7 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(UserRequestDTO dto) {
         if (userRepository.existsByUsername(dto.getUsername())) {
-            throw new IllegalArgumentException("Usuário já existe");
+            throw new ConflictException("Usuário já existe");
         }
 
         Role role;

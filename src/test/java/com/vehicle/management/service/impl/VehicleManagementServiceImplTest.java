@@ -4,6 +4,7 @@ import com.vehicle.management.dto.VehicleDTO;
 import com.vehicle.management.dto.request.VehiclePatchRequestDTO;
 import com.vehicle.management.dto.request.VehicleRequestDTO;
 import com.vehicle.management.dto.response.AppResponseDTO;
+import com.vehicle.management.exception.ConflictException;
 import com.vehicle.management.model.entity.Vehicle;
 import com.vehicle.management.repository.VehicleManagementRepository;
 import com.vehicle.management.service.VehiclePriceConversionService;
@@ -99,8 +100,8 @@ class VehicleManagementServiceImplTest {
         when(repository.findByPlateAndActiveTrue("ABC1234"))
                 .thenReturn(Optional.of(vehicle));
 
-        IllegalArgumentException ex = assertThrows(
-                IllegalArgumentException.class,
+        ConflictException ex = assertThrows(
+                ConflictException.class,
                 () -> service.addVehicle(requestDTO)
         );
 
