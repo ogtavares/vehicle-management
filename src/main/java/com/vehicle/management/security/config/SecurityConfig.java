@@ -1,6 +1,9 @@
 package com.vehicle.management.security.config;
 
+import com.vehicle.management.security.jwt.CustomAccessDeniedHandler;
+import com.vehicle.management.security.jwt.CustomAuthenticationEntryPoint;
 import com.vehicle.management.security.jwt.JwtAuthFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -17,15 +20,23 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-    private final JwtAuthFilter jwtAuthFilter;
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
-    }
+    @Autowired
+    private CustomAccessDeniedHandler accessDeniedHandler;
+
+    @Autowired
+    private CustomAuthenticationEntryPoint authenticationEntryPoint;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+                .exceptionHandling(ex -> ex
+                        .accessDeniedHandler(accessDeniedHandler)
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                )
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )

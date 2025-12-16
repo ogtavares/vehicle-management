@@ -32,7 +32,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> login(
-            @RequestBody AuthRequestDTO request
+            @RequestBody @Valid AuthRequestDTO request
     ) {
 
         Authentication authentication = authenticationManager.authenticate(

@@ -25,10 +25,24 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Usuário já existe");
         }
 
+        Role role;
+
+        if (dto.getRole() == null || dto.getRole().isBlank()) {
+            role = Role.ROLE_USER;
+        } else {
+            try {
+                role = Role.valueOf(dto.getRole().toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                throw new IllegalArgumentException(
+                        "Role inválida. Valores permitidos: ROLE_USER, ROLE_ADMIN"
+                );
+            }
+        }
+
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
-        user.setRoles(Set.of(Role.valueOf(dto.getRole())));
+        user.setRoles(Set.of(role));
 
         userRepository.save(user);
     }

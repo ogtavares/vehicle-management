@@ -4,6 +4,7 @@ import com.vehicle.management.dto.response.AppErrorResponseDTO;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,18 +13,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<AppErrorResponseDTO> handleGenericException(Exception ex) {
-//
-//        AppErrorResponseDTO error = AppErrorResponseDTO.builder()
-//                .status(500)
-//                .message("Erro interno do servidor")
-//                .details("Ocorreu um erro inesperado. Por favor, tente novamente mais tarde ou entre em contato com o suporte.")
-//                .build();
-//
-//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-//    }
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<AppErrorResponseDTO> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
 
@@ -99,5 +88,17 @@ public class GlobalExceptionHandler {
                         .message("Credenciais inválidas")
                         .details("Usuário ou senha incorretos")
                         .build());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<AppErrorResponseDTO> handleAccessDenied(AccessDeniedException ex) {
+
+        AppErrorResponseDTO error = AppErrorResponseDTO.builder()
+                .status(403)
+                .message("Acesso negado")
+                .details("Você não possui permissão para acessar este recurso.")
+                .build();
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 }
