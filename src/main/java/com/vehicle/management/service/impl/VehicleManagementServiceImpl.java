@@ -3,34 +3,51 @@ package com.vehicle.management.service.impl;
 import com.vehicle.management.dto.VehicleBrandReportDTO;
 import com.vehicle.management.dto.VehicleDTO;
 import com.vehicle.management.dto.VehicleFilterDTO;
+import com.vehicle.management.dto.request.VehicleRequestDTO;
 import com.vehicle.management.dto.response.AppResponseDTO;
 import com.vehicle.management.model.entity.Vehicle;
 import com.vehicle.management.repository.VehicleManagementRepository;
 import com.vehicle.management.service.VehicleManagementService;
+import com.vehicle.management.service.VehiclePriceConversionService;
 import com.vehicle.management.util.JsonMapperUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.*;
+
+import static java.util.Objects.nonNull;
 
 @Service
 public class VehicleManagementServiceImpl implements VehicleManagementService {
     @Autowired
     VehicleManagementRepository repository;
 
+    @Autowired
+    VehiclePriceConversionService vehiclePriceConversionService;
+
     @Override
-    public AppResponseDTO<Page<VehicleDTO>> getAllVehicles() {
+    public AppResponseDTO<Page<VehicleDTO>> getAllVehicles(Pageable pageable) {
         try {
-            List<Vehicle> vehicles = repository.findByActiveTrue();
-            if (vehicles.isEmpty()){
+            Page<Vehicle> vehicles = repository.findByActiveTrue(pageable);
+
+            if (!vehicles.hasContent()){
                 return AppResponseDTO.getSuccessResponse("Não há veículos ativos.");
             }
+
+            List<VehicleDTO> dtoList = JsonMapperUtil.convertList(vehicles.getContent(), VehicleDTO.class);
+            dtoList.forEach(v -> {
+                if (nonNull(v.getPrice())) {
+                    v.setPrice(vehiclePriceConversionService.convertUsdToBrl(v.getPrice()));
+                }
+            });
+
             return AppResponseDTO.<Page<VehicleDTO>>builder()
-                    .content(new PageImpl<>(JsonMapperUtil.convertList(vehicles, VehicleDTO.class)))
+                    .content(new PageImpl<>(dtoList, vehicles.getPageable(), vehicles.getTotalElements()))
                     .status(200)
                     .success(true)
                     .message("Veículos retornados com sucesso!")
@@ -45,7 +62,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponseDTO<Page<VehicleDTO>> getVehiclesByFilters(String plate, String brand, Integer year, String color, BigDecimal price) {
+    public AppResponseDTO<Page<VehicleDTO>> getVehiclesByFilters(String plate, String brand, Integer year, String color, BigDecimal price, Pageable pageable) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .plate(plate)
                 .brand(brand)
@@ -56,12 +73,18 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
         try {
 
-            List<Vehicle> vehicles = repository.findByFilters(plate, brand, year, color, price);
-            if (vehicles.isEmpty()){
+            Page<Vehicle> vehicles = repository.findByFilters(plate, brand, year, color, price, pageable);
+            if (!vehicles.hasContent()){
                 return AppResponseDTO.getSuccessResponse("Não há veículos para os parâmetros informados.", parameters);
             }
+            List<VehicleDTO> dtoList = JsonMapperUtil.convertList(vehicles.getContent(), VehicleDTO.class);
+            dtoList.forEach(v -> {
+                if (nonNull(v.getPrice())) {
+                    v.setPrice(vehiclePriceConversionService.convertUsdToBrl(v.getPrice()));
+                }
+            });
             return AppResponseDTO.<Page<VehicleDTO>>builder()
-                    .content(new PageImpl<>(JsonMapperUtil.convertList(vehicles, VehicleDTO.class)))
+                    .content(new PageImpl<>(dtoList, vehicles.getPageable(), vehicles.getTotalElements()))
                     .status(200)
                     .success(true)
                     .message("Veículos retornados com sucesso!")
@@ -78,19 +101,35 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponseDTO<Page<VehicleDTO>> getVehiclesBypriceRange(BigDecimal minprice, BigDecimal maxprice) {
+    public AppResponseDTO<Page<VehicleDTO>> getVehiclesBypriceRange(BigDecimal minPrice, BigDecimal maxPrice, Pageable pageable) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
-                .minPrice(minprice)
-                .maxPrice(maxprice)
+                .minPrice(minPrice)
+                .maxPrice(maxPrice)
                 .build();
         Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
+
+        if (nonNull(minPrice) && nonNull(maxPrice) && minPrice.compareTo(maxPrice) > 0) {
+            return AppResponseDTO.<Page<VehicleDTO>>builder()
+                    .status(400)
+                    .success(false)
+                    .message("O preço mínimo não pode ser maior que o preço máximo.")
+                    .parameters(parameters)
+                    .build();
+        }
         try {
-            List<Vehicle> vehicles = repository.findByPriceBetweenAndActiveTrue(minprice, maxprice);
-            if (vehicles.isEmpty()){
+            Page<Vehicle> vehicles = repository.findByPriceBetweenAndActiveTrue(minPrice, maxPrice, pageable);
+            if (!vehicles.hasContent()){
                 return AppResponseDTO.getSuccessResponse("Não há veículos ativos.", parameters);
             }
+            List<VehicleDTO> dtoList = JsonMapperUtil.convertList(vehicles.getContent(), VehicleDTO.class);
+            dtoList.forEach(v -> {
+                if (nonNull(v.getPrice())) {
+                    v.setPrice(vehiclePriceConversionService.convertUsdToBrl(v.getPrice()));
+                }
+            });
+
             return AppResponseDTO.<Page<VehicleDTO>>builder()
-                    .content(new PageImpl<>(JsonMapperUtil.convertList(vehicles, VehicleDTO.class)))
+                    .content(new PageImpl<>(dtoList, vehicles.getPageable(), vehicles.getTotalElements()))
                     .status(200)
                     .success(true)
                     .message("Veículos retornados com sucesso!")
@@ -117,8 +156,13 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             if (vehicle.isEmpty()){
                 return AppResponseDTO.getSuccessResponse("Não há veículo ativo para o id informado.", parameters);
             }
+            VehicleDTO dto = JsonMapperUtil.convert(vehicle, VehicleDTO.class);
+            if (nonNull(dto.getPrice())) {
+                dto.setPrice(vehiclePriceConversionService.convertUsdToBrl(dto.getPrice()));
+            }
+
             return AppResponseDTO.<VehicleDTO>builder()
-                    .content((JsonMapperUtil.convert(vehicle, VehicleDTO.class)))
+                    .content(dto)
                     .status(200)
                     .success(true)
                     .message("Veículo retornado com sucesso!")
@@ -135,24 +179,30 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponseDTO<List<VehicleBrandReportDTO>> getVehicleBrandReport() {
+    public AppResponseDTO<Page<VehicleBrandReportDTO>> getVehicleBrandReport(Pageable pageable) {
         try {
-            List<Object[]> vehicleCount = repository.countVehiclesByBrand();
-            if (vehicleCount.isEmpty()){
-                return AppResponseDTO.getSuccessResponse("Não há veículos ativos para criação do relatório.");
+            Page<Object[]> vehicleCountPage = repository.countVehiclesByBrand(pageable);
+
+            if (!vehicleCountPage.hasContent()) {
+                return AppResponseDTO.getSuccessResponse(
+                        "Não há veículos ativos para criação do relatório."
+                );
             }
-            List<VehicleBrandReportDTO> report = vehicleCount.stream()
+
+            List<VehicleBrandReportDTO> report = vehicleCountPage.getContent().stream()
                     .map(r -> new VehicleBrandReportDTO((String) r[0], (Long) r[1]))
                     .toList();
 
-            return AppResponseDTO.<List<VehicleBrandReportDTO>>builder()
-                    .content(report)
+            Page<VehicleBrandReportDTO> pageReport = new PageImpl<>(report, pageable, vehicleCountPage.getTotalElements());
+
+            return AppResponseDTO.<Page<VehicleBrandReportDTO>>builder()
+                    .content(pageReport)
                     .status(200)
                     .success(true)
                     .message("Relatório criado com sucesso!")
                     .build();
         } catch (Exception e) {
-            return AppResponseDTO.<List<VehicleBrandReportDTO>>builder()
+            return AppResponseDTO.<Page<VehicleBrandReportDTO>>builder()
                     .status(500)
                     .success(false)
                     .message("Erro ao tentar criar relatório. Por favor, contate o suporte.")
@@ -160,8 +210,9 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         }
     }
 
+
     @Override
-    public AppResponseDTO<?> addVehicle(VehicleDTO vehicleDTO) {
+    public AppResponseDTO<?> addVehicle(VehicleRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
                 .brand(vehicleDTO.getBrand())
                 .year(vehicleDTO.getYear())
@@ -171,11 +222,21 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
 
         try {
-            Vehicle newVehicle = repository.save(JsonMapperUtil.convert(vehicleDTO, Vehicle.class));
+            Vehicle vehicle = JsonMapperUtil.convert(vehicleDTO, Vehicle.class);
+            if (nonNull(vehicleDTO.getPrice())) {
+                vehicle.setPrice(vehiclePriceConversionService.convertBrlToUsd(vehicleDTO.getPrice()));
+            }
+            Vehicle savedVehicle = repository.save(vehicle);
+
+            VehicleDTO savedDTO = JsonMapperUtil.convert(savedVehicle, VehicleDTO.class);
+
+            if (nonNull(savedDTO.getPrice())){
+                savedDTO.setPrice(vehiclePriceConversionService.convertUsdToBrl(savedDTO.getPrice()));
+            }
             return AppResponseDTO.<VehicleDTO>builder()
                     .status(200)
                     .success(true)
-                    .content(JsonMapperUtil.convert(newVehicle, VehicleDTO.class))
+                    .content(savedDTO)
                     .message("Novo veículo salvo com sucesso!")
                     .parameters(parameters)
                     .build();
@@ -197,9 +258,9 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponseDTO<VehicleDTO> updateVehicle(VehicleDTO vehicleDTO) {
+    public AppResponseDTO<VehicleDTO> updateVehicle(UUID id, VehicleRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
-                .id(vehicleDTO.getId())
+                .id(id)
                 .brand(vehicleDTO.getBrand())
                 .year(vehicleDTO.getYear())
                 .plate(vehicleDTO.getPlate())
@@ -208,7 +269,7 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
 
         try {
-            Optional<Vehicle> existing = repository.findByIdAndActiveTrue(vehicleDTO.getId());
+            Optional<Vehicle> existing = repository.findByIdAndActiveTrue(id);
             if (existing.isEmpty()) {
                 return AppResponseDTO.getSuccessResponse("Veículo não encontrado para atualização.", parameters);
             }
@@ -218,15 +279,22 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             vehicle.setPlate(vehicleDTO.getPlate());
             vehicle.setColor(vehicleDTO.getColor());
             vehicle.setYear(vehicleDTO.getYear());
-            vehicle.setPrice(vehicleDTO.getPrice());
+            if (vehicleDTO.getPrice() != null) {
+                vehicle.setPrice(vehiclePriceConversionService.convertBrlToUsd(vehicleDTO.getPrice()));
+            }
 
             Vehicle updated = repository.save(vehicle);
+
+            VehicleDTO updatedDto = JsonMapperUtil.convert(updated, VehicleDTO.class);
+            if (nonNull(updatedDto.getPrice())) {
+                updatedDto.setPrice(vehiclePriceConversionService.convertUsdToBrl(updatedDto.getPrice()));
+            }
 
             return AppResponseDTO.<VehicleDTO>builder()
                     .status(200)
                     .success(true)
                     .message("Veículo atualizado com sucesso!")
-                    .content(JsonMapperUtil.convert(updated, VehicleDTO.class))
+                    .content(updatedDto)
                     .parameters(parameters)
                     .build();
         } catch (Exception e) {
@@ -240,32 +308,38 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
     }
 
     @Override
-    public AppResponseDTO<VehicleDTO> partialUpdateVehicle(VehicleDTO vehicleDTO) {
+    public AppResponseDTO<VehicleDTO> partialUpdateVehicle(UUID id, VehicleRequestDTO vehicleDTO) {
         VehicleFilterDTO filters = VehicleFilterDTO.builder()
-                .id(vehicleDTO.getId())
+                .id(id)
                 .build();
         Map<String, Object> parameters = JsonMapperUtil.toNonNullMap(filters);
 
         try {
-            Optional<Vehicle> existing = repository.findByIdAndActiveTrue(vehicleDTO.getId());
+            Optional<Vehicle> existing = repository.findByIdAndActiveTrue(id);
             if (existing.isEmpty()) {
                 return AppResponseDTO.getSuccessResponse("Veículo não encontrado para atualização parcial.", parameters);
             }
 
             Vehicle vehicle = existing.get();
-            if (vehicleDTO.getBrand() != null) vehicle.setBrand(vehicleDTO.getBrand());
-            if (vehicleDTO.getPlate() != null) vehicle.setPlate(vehicleDTO.getPlate());
-            if (vehicleDTO.getColor() != null) vehicle.setColor(vehicleDTO.getColor());
-            if (vehicleDTO.getYear() != null) vehicle.setYear(vehicleDTO.getYear());
-            if (vehicleDTO.getPrice() != null) vehicle.setPrice(vehicleDTO.getPrice());
+
+            applyPartialUpdates(vehicle, vehicleDTO);
+
+            if (nonNull(vehicleDTO.getPrice())) {
+                vehicle.setPrice(vehiclePriceConversionService.convertBrlToUsd(vehicleDTO.getPrice()));
+            }
 
             Vehicle updated = repository.save(vehicle);
+
+            VehicleDTO updatedDto = JsonMapperUtil.convert(updated, VehicleDTO.class);
+            if (nonNull(updatedDto.getPrice())) {
+                updatedDto.setPrice(vehiclePriceConversionService.convertUsdToBrl(updatedDto.getPrice()));
+            }
 
             return AppResponseDTO.<VehicleDTO>builder()
                     .status(200)
                     .success(true)
                     .message("Veículo atualizado parcialmente com sucesso!")
-                    .content(JsonMapperUtil.convert(updated, VehicleDTO.class))
+                    .content(updatedDto)
                     .parameters(parameters)
                     .build();
         } catch (Exception e) {
@@ -307,5 +381,12 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
                     .parameters(parameters)
                     .build();
         }
+    }
+
+    private void applyPartialUpdates(Vehicle vehicle, VehicleRequestDTO vehicleDTO) {
+        if (nonNull(vehicleDTO.getBrand())) vehicle.setBrand(vehicleDTO.getBrand());
+        if (nonNull(vehicleDTO.getPlate())) vehicle.setPlate(vehicleDTO.getPlate());
+        if (nonNull(vehicleDTO.getColor())) vehicle.setColor(vehicleDTO.getColor());
+        if (nonNull(vehicleDTO.getYear())) vehicle.setYear(vehicleDTO.getYear());
     }
 }
