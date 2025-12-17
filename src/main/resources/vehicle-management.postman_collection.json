@@ -1,0 +1,590 @@
+{
+	"info": {
+		"_postman_id": "ada3106f-d109-48d0-9a1d-8391f5104f19",
+		"name": "vehicle-management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33321231"
+	},
+	"item": [
+		{
+			"name": "Paginacao-BuscaDeVeiculos",
+			"item": [
+				{
+					"name": "page = 0 & size = 5",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/veiculos?page=0&size=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "page = 1 & size = 5",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/veiculos?page=1&size=5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ordenação ASC preço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/veiculos?sort=preco,asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "preco,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ordenação DESC preço",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/veiculos?sort=preco,desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "preco,desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ordenação DESC ano",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/veiculos?sort=ano,desc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "ano,desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Range de preço + paginação + ordenação",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/veiculos?minPreco=300000&maxPreco=400000&page=0&size=5&sort=preco,asc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"veiculos"
+							],
+							"query": [
+								{
+									"key": "minPreco",
+									"value": "300000"
+								},
+								{
+									"key": "maxPreco",
+									"value": "400000"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "sort",
+									"value": "preco,asc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "logar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"usuario\": \"usuarioTeste\",\r\n  \"senha\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/logar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"logar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "registrar",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"usuario\": \"usuarioTeste\",\r\n  \"senha\": \"123456\",\r\n  \"perfil\": \"ADMIN\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/registrar",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"registrar"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "buscaDeVeiculos",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/veiculos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "buscaDeVeiculoPorId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/veiculos/02595854-602a-49a1-a829-34577b7b3f5e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos",
+						"02595854-602a-49a1-a829-34577b7b3f5e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AdicionarVeiculo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJvbmx5QWRtaW4iLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTkxNDk1MCwiZXhwIjoxNzY1OTE4NTUwfQ.Fod6J73eiPOEIxebUTt8o8V59mMOaSRYVvWgEEdhHuuYXMGSGW39tr_KRQTr-LNZ",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placa\": \"ABC1D78\",\r\n  \"marca\": \"Volkswagen\",\r\n  \"cor\": \"Verde\",\r\n  \"ano\": 2002,\r\n  \"preco\": 25000.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/veiculos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AtualizarVeiculo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"placa\": \"FFF6009\",\r\n  \"marca\": \"Subaru\",\r\n  \"cor\": \"Azul\",\r\n  \"ano\": 2012,\r\n  \"preco\": 95500.00\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/veiculos/02595854-602a-49a1-a829-34577b7b3f5e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos",
+						"02595854-602a-49a1-a829-34577b7b3f5e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AtualizarParcialmenteVeiculo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"placa\": \"FFF6010\",\r\n    \"marca\": \"Honda\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/veiculos/02595854-602a-49a1-a829-34577b7b3f5e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos",
+						"02595854-602a-49a1-a829-34577b7b3f5e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeletarVeiculo",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/veiculos/02595854-602a-49a1-a829-34577b7b3f5e",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos",
+						"02595854-602a-49a1-a829-34577b7b3f5e"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RelatorioPorMarca",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/veiculos/relatorios/por-marca",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos",
+						"relatorios",
+						"por-marca"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "buscaDeVeiculosPorFiltro",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiJ1c3VhcmlvVGVzdGUiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc2NTk0MjM3NiwiZXhwIjoxNzY1OTQ1OTc2fQ.R4aPUA99y2gbyi8BCbfe-tWzdtMR4P4xREsQKG1XlHKPo15gzUgWFd-ZjDQpJAIJ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/veiculos?cor=preto",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"veiculos"
+					],
+					"query": [
+						{
+							"key": "cor",
+							"value": "preto"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
