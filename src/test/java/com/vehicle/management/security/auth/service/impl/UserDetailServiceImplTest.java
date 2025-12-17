@@ -1,6 +1,6 @@
 package com.vehicle.management.security.auth.service.impl;
 
-import com.vehicle.management.model.enums.Role;
+import com.vehicle.management.security.model.enums.Role;
 import com.vehicle.management.security.user.model.entity.User;
 import com.vehicle.management.security.repository.UserRepository;
 import org.junit.jupiter.api.Test;
