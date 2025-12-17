@@ -118,6 +118,7 @@ Cobertura inclui:
 
 ### Testes de Controller
 - Cenários cobertos:
+    - 201 - criado com sucesso 
     - 200 – sucesso
     - 400 – erro de validação
     - 401 – não autenticado
