@@ -200,6 +200,6 @@ class VehicleManagementControllerTest {
 
         mockMvc.perform(get("/veiculos/relatorios/por-marca"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content.content[0].brand").value("Toyota"));
+                .andExpect(jsonPath("$.content.content[0].marca").value("Toyota"));
     }
 }

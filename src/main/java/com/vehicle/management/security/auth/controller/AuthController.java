@@ -5,6 +5,9 @@ import com.vehicle.management.security.auth.dto.response.AuthResponseDTO;
 import com.vehicle.management.security.jwt.service.JwtService;
 import com.vehicle.management.security.user.dto.request.UserRequestDTO;
 import com.vehicle.management.security.user.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Tag(
+        name = "Autenticação",
+        description = "Endpoints responsáveis por autenticação e registro de usuários"
+)
 public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -30,7 +37,14 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/login")
+    @Operation(
+            summary = "Login do usuário",
+            description = "Autentica o usuário a partir de usuario e senha e retorna um token JWT válido."
+    )
+    @ApiResponse(responseCode = "200", description = "Login realizado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Erro de validação nos dados de entrada")
+    @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
+    @PostMapping("/logar")
     public ResponseEntity<AuthResponseDTO> login(
             @RequestBody @Valid AuthRequestDTO request
     ) {
@@ -48,8 +62,25 @@ public class AuthController {
         return ResponseEntity.ok(new AuthResponseDTO(token));
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody @Valid UserRequestDTO dto) {
+    @Operation(
+            summary = "Registro de usuário",
+            description = """
+                    Registra um novo usuário no sistema.
+
+                    O campo 'role' aceita apenas os valores:
+                    - ADMIN
+                    - USER
+
+                    Caso o campo 'role' não seja informado, o usuário será registrado automaticamente como USER.
+                    """
+    )
+    @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Erro de validação nos dados de entrada")
+    @ApiResponse(responseCode = "409", description = "Usuário já existe")
+    @PostMapping("/registrar")
+    public ResponseEntity<Void> register(
+            @RequestBody @Valid UserRequestDTO dto
+    ) {
         userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

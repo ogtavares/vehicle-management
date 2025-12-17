@@ -35,7 +35,7 @@ class VehicleManagementIntegrationTest {
         register.setPassword("admin123");
         register.setRole("ROLE_ADMIN");
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/registrar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(register)))
                 .andExpect(status().isCreated());
@@ -43,7 +43,7 @@ class VehicleManagementIntegrationTest {
         // 2. Autenticar usuário e obter JWT
         AuthRequestDTO login = new AuthRequestDTO("admin", "admin123");
 
-        String tokenResponse = mockMvc.perform(post("/auth/login")
+        String tokenResponse = mockMvc.perform(post("/auth/logar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
                 .andExpect(status().isOk())

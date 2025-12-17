@@ -184,6 +184,13 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
             throw new IllegalArgumentException(String.format("Veículo com o id (%s) informado não encontrado para atualização.", id));
         }
 
+        if (nonNull(vehicleDTO.getPlate())){
+            Optional<Vehicle> existingPlate = repository.findByPlateAndActiveTrue(vehicleDTO.getPlate());
+            if (existingPlate.isPresent()){
+                throw new ConflictException(String.format("Já existe um veículo com a placa (%s) informada.", vehicleDTO.getPlate()));
+            }
+        }
+
         Vehicle vehicle = existing.get();
         vehicle.setBrand(vehicleDTO.getBrand());
         vehicle.setPlate(vehicleDTO.getPlate());
@@ -219,6 +226,13 @@ public class VehicleManagementServiceImpl implements VehicleManagementService {
         Optional<Vehicle> existing = repository.findByIdAndActiveTrue(id);
         if (existing.isEmpty()) {
             throw new IllegalArgumentException(String.format("Veículo com o id (%s) informado não encontrado para atualização parcial", id));
+        }
+
+        if (nonNull(vehicleDTO.getPlate())){
+            Optional<Vehicle> existingPlate = repository.findByPlateAndActiveTrue(vehicleDTO.getPlate());
+            if (existingPlate.isPresent()){
+                throw new ConflictException(String.format("Já existe um veículo com a placa (%s) informada.", vehicleDTO.getPlate()));
+            }
         }
 
         Vehicle vehicle = existing.get();

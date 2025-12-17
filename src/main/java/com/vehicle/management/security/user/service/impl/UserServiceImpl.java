@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -22,6 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(UserRequestDTO dto) {
+
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new ConflictException("Usuário já existe");
         }
@@ -32,10 +34,17 @@ public class UserServiceImpl implements UserService {
             role = Role.ROLE_USER;
         } else {
             try {
-                role = Role.valueOf(dto.getRole().toUpperCase());
+                String roleName = dto.getRole().toUpperCase();
+
+                if (!roleName.startsWith("ROLE_")) {
+                    roleName = "ROLE_" + roleName;
+                }
+
+                role = Role.valueOf(roleName);
+
             } catch (IllegalArgumentException ex) {
                 throw new IllegalArgumentException(
-                        "Role inválida. Valores permitidos: ROLE_USER, ROLE_ADMIN"
+                        "Perfil inválido. Valores permitidos: USER, ADMIN"
                 );
             }
         }

@@ -52,7 +52,7 @@ class AuthControllerTest {
         when(jwtService.generateToken(any()))
                 .thenReturn("token-jwt");
 
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/auth/logar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                         {
@@ -68,7 +68,7 @@ class AuthControllerTest {
     @Test
     void shouldReturn400WhenLoginPayloadIsInvalid() throws Exception {
 
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/auth/logar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
@@ -85,7 +85,7 @@ class AuthControllerTest {
         when(authenticationManager.authenticate(any()))
                 .thenThrow(new BadCredentialsException("Credenciais inválidas"));
 
-        mockMvc.perform(post("/auth/login")
+        mockMvc.perform(post("/auth/logar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
@@ -100,7 +100,7 @@ class AuthControllerTest {
     @Test
     void shouldRegisterUserSuccessfully() throws Exception {
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/registrar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
@@ -114,7 +114,7 @@ class AuthControllerTest {
     @Test
     void shouldReturn400WhenRegisterPayloadIsInvalid() throws Exception {
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/registrar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
@@ -131,7 +131,7 @@ class AuthControllerTest {
         doThrow(new IllegalArgumentException("Usuário já existe"))
                 .when(userService).createUser(any());
 
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/registrar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                             {
