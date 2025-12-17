@@ -1,7 +1,7 @@
 package com.vehicle.management.security.user.service.impl;
 
 import com.vehicle.management.exception.ConflictException;
-import com.vehicle.management.model.enums.Role;
+import com.vehicle.management.security.model.enums.Role;
 import com.vehicle.management.security.user.dto.request.UserRequestDTO;
 import com.vehicle.management.security.repository.UserRepository;
 import com.vehicle.management.security.user.model.entity.User;
